@@ -93,8 +93,9 @@ WITH (FORMAT csv, HEADER true, DELIMITER ',', QUOTE '"');
 ALTER TABLE Preliminary ADD COLUMN ID BIGSERIAL;
 ALTER TABLE Preliminary ADD CONSTRAINT preliminary_pkey PRIMARY KEY (ID);
 
---check to see if it worked (only shows 20 columns)
-SELECT COUNT(*) FROM Preliminary;
-SELECT * FROM Preliminary LIMIT 20;
-
--- display = \d DB_name
+--check to see if it worked 
+SELECT * FROM Preliminary;
+-- to show the the DB without looking like giberish use 
+--\x on and \x off when done
+-- these show the columns as rows with the two columns being csv columns 
+--and record data
