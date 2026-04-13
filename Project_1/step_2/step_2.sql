@@ -281,34 +281,6 @@ SELECT DISTINCT denial_reason_3::INT, denial_reason_name_3
 FROM Preliminary
 WHERE denial_reason_3 != '';
 
-CREATE TABLE CensusTract(
-    census_tract_number NUMERIC,
-    county_code INT,
-    state_code INT, 
-    population INT,
-    minority_population NUMERIC,
-    hud_median_family_income INT,
-    tract_to_msamd_income NUMERIC,
-    number_of_owner_occupied_units INT,
-    number_of_1_to_4_family_units INT,
-
-    PRIMARY KEY (census_tract_number, county_code, state_code),
-    FOREIGN KEY (county_code) REFERENCES County(county_code),
-    FOREIGN KEY (state_code) REFERENCES State(state_code)
-);
-INSERT INTO CensusTract(census_tract_number, county_code, state_code, population, minority_population, hud_median_family_income, tract_to_msamd_income, number_of_owner_occupied_units, number_of_1_to_4_family_units)
-SELECT DISTINCT 
-    census_tract_number::NUMERIC,
-    county_code::INT,
-    state_code::INT,
-    NULLIF(population, '')::INT,
-    NULLIF(minority_population, '')::NUMERIC,
-    NULLIF(hud_median_family_income, '')::INT,
-    NULLIF(tract_to_msamd_income, '')::NUMERIC,
-    NULLIF(number_of_owner_occupied_units, '')::INT,
-    NULLIF(number_of_1_to_4_family_units, '')::INT
-FROM Preliminary
-WHERE census_tract_number != '';
 
 CREATE TABLE LoanApplication(
     id INT PRIMARY KEY,
@@ -325,6 +297,12 @@ CREATE TABLE LoanApplication(
     state_code INT,
     county_code INT,
     census_tract_number NUMERIC,
+    population INT,
+    minority_population NUMERIC,
+    hud_median_family_income INT,
+    tract_to_msamd_income NUMERIC,
+    number_of_owner_occupied_units INT,
+    number_of_1_to_4_family_units INT,
     applicant_ethnicity INT,
     co_applicant_ethnicity INT,
     applicant_race_1 INT,
@@ -382,8 +360,7 @@ CREATE TABLE LoanApplication(
     FOREIGN KEY (co_applicant_sex) REFERENCES CoApplicantSex(co_applicant_sex),
     FOREIGN KEY (denial_reason_1) REFERENCES DenialReason1(denial_reason_1),
     FOREIGN KEY (denial_reason_2) REFERENCES DenialReason2(denial_reason_2),
-    FOREIGN KEY (denial_reason_3) REFERENCES DenialReason3(denial_reason_3),
-    FOREIGN KEY (census_tract_number, county_code, state_code) REFERENCES CensusTract(census_tract_number, county_code, state_code)
+    FOREIGN KEY (denial_reason_3) REFERENCES DenialReason3(denial_reason_3)
 
 );
 
@@ -402,6 +379,12 @@ INSERT INTO LoanApplication(
     state_code,
     county_code,
     census_tract_number,
+    population,
+    minority_population,
+    hud_median_family_income,
+    tract_to_msamd_income,
+    number_of_owner_occupied_units,
+    number_of_1_to_4_family_units,
     applicant_ethnicity,
     co_applicant_ethnicity,
     applicant_race_1,
@@ -444,6 +427,12 @@ SELECT
     NULLIF(state_code,'')::INT,
     NULLIF(county_code,'')::INT,
     NULLIF(census_tract_number,'')::NUMERIC,
+    NULLIF(population,'')::INT,
+    NULLIF(minority_population,'')::NUMERIC,
+    NULLIF(hud_median_family_income,'')::INT,
+    NULLIF(tract_to_msamd_income,'')::NUMERIC,
+    NULLIF(number_of_owner_occupied_units,'')::INT,
+    NULLIF(number_of_1_to_4_family_units,'')::INT,
     NULLIF(applicant_ethnicity,'')::INT,
     NULLIF(co_applicant_ethnicity,'')::INT,
     NULLIF(applicant_race_1,'')::INT,
