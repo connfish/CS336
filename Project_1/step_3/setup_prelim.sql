@@ -83,10 +83,9 @@ CREATE Table Preliminary(
   number_of_owner_occupied_units TEXT,
   number_of_1_to_4_family_units TEXT,
   application_date_indicator TEXT
-);        
+);
 
 \copy Preliminary FROM 'hmda_2017_nj_all-records_labels.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', QUOTE '"');
 
-ALTER TABLE Preliminary ADD COLUMN id SERIAL;
-ALTER TABLE Preliminary ADD CONSTRAINT preliminary_pkey PRIMARY KEY (id);
-
+ALTER TABLE Preliminary ADD COLUMN ID BIGSERIAL;
+ALTER TABLE Preliminary ADD CONSTRAINT preliminary_pkey PRIMARY KEY (ID);

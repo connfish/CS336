@@ -133,27 +133,41 @@ SELECT DISTINCT county_code::INT, county_name
 FROM Preliminary
 WHERE county_code != '';
 
-CREATE TABLE Ethnicity(
-    ethnicity_code INT PRIMARY KEY,
-    ethnicity_name TEXT
+CREATE TABLE ApplicantEthnicity(
+    applicant_ethnicity INT PRIMARY KEY,
+    applicant_ethnicity_name TEXT
 );
-INSERT INTO Ethnicity(ethnicity_code, ethnicity_name)
-SELECT DISTINCT code, name FROM (
-    SELECT applicant_ethnicity::INT AS code, applicant_ethnicity_name AS name FROM Preliminary WHERE applicant_ethnicity != ''
-    UNION
-    SELECT co_applicant_ethnicity::INT, co_applicant_ethnicity_name FROM Preliminary WHERE co_applicant_ethnicity != ''
-) AS all_ethnicities;
+INSERT INTO ApplicantEthnicity(applicant_ethnicity, applicant_ethnicity_name)
+SELECT DISTINCT applicant_ethnicity::INT, applicant_ethnicity_name
+FROM Preliminary
+WHERE applicant_ethnicity != '';
 
-CREATE TABLE Sex(
-    sex_code INT PRIMARY KEY,
-    sex_name TEXT
+CREATE TABLE CoApplicantEthnicity(
+    co_applicant_ethnicity INT PRIMARY KEY,
+    co_applicant_ethnicity_name TEXT
 );
-INSERT INTO Sex(sex_code, sex_name)
-SELECT DISTINCT code, name FROM (
-    SELECT applicant_sex::INT AS code, applicant_sex_name AS name FROM Preliminary WHERE applicant_sex != ''
-    UNION
-    SELECT co_applicant_sex::INT, co_applicant_sex_name FROM Preliminary WHERE co_applicant_sex != ''
-) AS all_sexes;
+INSERT INTO CoApplicantEthnicity(co_applicant_ethnicity, co_applicant_ethnicity_name)
+SELECT DISTINCT co_applicant_ethnicity::INT, co_applicant_ethnicity_name
+FROM Preliminary
+WHERE co_applicant_ethnicity != '';
+
+CREATE TABLE ApplicantSex(
+    applicant_sex INT PRIMARY KEY,
+    applicant_sex_name TEXT
+);
+INSERT INTO ApplicantSex(applicant_sex, applicant_sex_name)
+SELECT DISTINCT applicant_sex::INT, applicant_sex_name
+FROM Preliminary
+WHERE applicant_sex != '';
+
+CREATE TABLE CoApplicantSex(
+    co_applicant_sex INT PRIMARY KEY,
+    co_applicant_sex_name TEXT
+);
+INSERT INTO CoApplicantSex(co_applicant_sex, co_applicant_sex_name)
+SELECT DISTINCT co_applicant_sex::INT, co_applicant_sex_name
+FROM Preliminary
+WHERE co_applicant_sex != '';
 
 -- Race: single lookup table replacing ApplicantRace1-5 and CoApplicantRace1-5
 -- All race slots share the same code->name mapping.
@@ -218,24 +232,14 @@ CREATE TABLE Location(
     number_of_owner_occupied_units INT,
     number_of_1_to_4_family_units  INT,
 
+    UNIQUE (county_code, msamd, state_code, census_tract_number,
+            population, minority_population, hud_median_family_income,
+            tract_to_msamd_income, number_of_owner_occupied_units,
+            number_of_1_to_4_family_units),
+
     FOREIGN KEY (county_code)  REFERENCES County(county_code),
     FOREIGN KEY (msamd)        REFERENCES MSAMD(msamd),
     FOREIGN KEY (state_code)   REFERENCES State(state_code)
-);
-
--- Unique index using COALESCE so NULL values are treated as equal (standard
--- UNIQUE constraints treat NULLs as distinct, which would allow logical duplicates).
-CREATE UNIQUE INDEX location_natural_key ON Location(
-    COALESCE(county_code, -1),
-    COALESCE(msamd, -1),
-    COALESCE(state_code, -1),
-    COALESCE(census_tract_number, -1),
-    COALESCE(population, -1),
-    COALESCE(minority_population, -1),
-    COALESCE(hud_median_family_income, -1),
-    COALESCE(tract_to_msamd_income, -1),
-    COALESCE(number_of_owner_occupied_units, -1),
-    COALESCE(number_of_1_to_4_family_units, -1)
 );
 
 INSERT INTO Location(
@@ -298,10 +302,10 @@ CREATE TABLE LoanApplication(
     FOREIGN KEY (hoepa_status)           REFERENCES HOEPAStatus(hoepa_status),
     FOREIGN KEY (lien_status)            REFERENCES LienStatus(lien_status),
     FOREIGN KEY (edit_status)            REFERENCES EditStatus(edit_status),
-    FOREIGN KEY (applicant_ethnicity)    REFERENCES Ethnicity(ethnicity_code),
-    FOREIGN KEY (co_applicant_ethnicity) REFERENCES Ethnicity(ethnicity_code),
-    FOREIGN KEY (applicant_sex)          REFERENCES Sex(sex_code),
-    FOREIGN KEY (co_applicant_sex)       REFERENCES Sex(sex_code),
+    FOREIGN KEY (applicant_ethnicity)    REFERENCES ApplicantEthnicity(applicant_ethnicity),
+    FOREIGN KEY (co_applicant_ethnicity) REFERENCES CoApplicantEthnicity(co_applicant_ethnicity),
+    FOREIGN KEY (applicant_sex)          REFERENCES ApplicantSex(applicant_sex),
+    FOREIGN KEY (co_applicant_sex)       REFERENCES CoApplicantSex(co_applicant_sex),
     FOREIGN KEY (location_id)            REFERENCES Location(location_id)
 );
 
@@ -413,35 +417,3 @@ UNION ALL
 SELECT id, denial_reason_2::INT, 2 FROM Preliminary WHERE denial_reason_2 != ''
 UNION ALL
 SELECT id, denial_reason_3::INT, 3 FROM Preliminary WHERE denial_reason_3 != '';
-
---code for video step do not run if setting up this step
-
--- Show all normalized tables from Step 3
--- Use \q or q to exit each table's output early
--- use \pset pager off to disable paging and show all results at once
-SELECT * FROM Agency;
-SELECT * FROM LoanType;
-SELECT * FROM PropertyType;
-SELECT * FROM LoanPurpose;
-SELECT * FROM OwnerOccupancy;
-SELECT * FROM Preapproval;
-SELECT * FROM ActionTaken;
-SELECT * FROM PurchaserType;
-SELECT * FROM HOEPAStatus;
-SELECT * FROM LienStatus;
-SELECT * FROM EditStatus;
-SELECT * FROM MSAMD;
-SELECT * FROM State;
-SELECT * FROM County;
-SELECT * FROM Ethnicity;
-SELECT * FROM Sex;
-SELECT * FROM Race;
-SELECT * FROM DenialReason;
---these tables have more than 100 rows, so we will only show the first 10 rows for each
---LIMIT 20
-SELECT * FROM Location;
-SELECT * FROM LoanApplication;
-SELECT * FROM ApplicantRace;
-SELECT * FROM CoApplicantRace;
-SELECT * FROM ApplicationDenialReason;
-
