@@ -1,7 +1,10 @@
 For this project you will make a program that accesses the database using
 natural language using a local llm. It is worth 12 pts.
 
-This project uses the database from project 1. If yours does not work at all, you can get a working one from another group, and make sure to cite them in your README. If yours mostly works, you can just use it as long as it has many tables and all the data. If it has both these features it will work fine for this project.
+This project uses the database from project 1. If yours does not work at all, you can 
+get a working one from another group, and make sure to cite them in your README. If 
+yours mostly works, you can just use it as long as it has many tables and all the data. 
+If it has both these features it will work fine for this project.
 
 This program will have several parts. Much of the programming work will be
 debugging, you are encouraged to use online LLMs for debugging and
@@ -20,7 +23,8 @@ ON ILAB:
 query, and prints out the results on the database. (Note pandas may be
 helpful for table formatting). You can also make this program
 work by reading from stdin when no argument is passed, you will need
-to adjust the ssh tunnel to pass via stdin as well. This last sentence is optional, it is find to pass arguments as well
+to adjust the ssh tunnel to pass via stdin as well. This last sentence is optional, it is 
+find to pass arguments as well
 
 LOCALLY:
 1. Make a file which is a subset of the previos SQL script including only
@@ -61,30 +65,45 @@ EXTRA CREDIT
 ------------
 
 
-This part is only recommended if you find yourself with spare time, it will take more time than it is worth in points.
+This part is only recommended if you find yourself with spare time, it will take more 
+time than it is worth in points.
 
 This part is worth up to 3 points (3% of your final grade) in extra credit.
 
-If you are unsure of any part of this project, you should as an LLM to explain it to you. AI use is permitted for this project. The good ones right now are Claude gemini  and chat GPT. You should have free access to gemeni through your rutgers email address and the others through varios free trials. YOU MUST INCLUDE ALL TRANSCRIPTS OF ALL CHATS.
+If you are unsure of any part of this project, you should as an LLM to explain it to you. 
+AI use is permitted for this project. The good ones right now are Claude gemini  and chat 
+GPT. You should have free access to gemeni through your rutgers email address and the 
+others through varios free trials. YOU MUST INCLUDE ALL TRANSCRIPTS OF ALL CHATS.
 
-The goal of this project is to have a working front end for your project. In order to make this work you will need to choose a frontend framework, you may choose any one you like.
+The goal of this project is to have a working front end for your project. In order to 
+make this work you will need to choose a frontend framework, you may choose any one you like.
 
  
 The points will be awarded as follows:
 
-1 pt: basic working frontend that provides the functionality that the backend did. For this you need a textbox to enter in the natural language query and be able to see the output. you should also be able to go back and make new question once you are done looking at the output.
+1 pt: basic working frontend that provides the functionality that the backend did. 
+For this you need a textbox to enter in the natural language query and be able to see 
+the output. you should also be able to go back and make new question once you are done 
+looking at the output.
 
-1pt organized interactive tables that you can sort and interact with. The output table should be well formatted and have interactive tables. You should also in general have an attractive interface that looks modern
+1pt organized interactive tables that you can sort and interact with. The output table 
+should be well formatted and have interactive tables. You should also in general have 
+an attractive interface that looks modern
 
-1pt Ability to see output. This should have separate boxes in the output screen to show the SQL query, and the table and another box to show the output of the LLM, along with the original query done by the user.
+1pt Ability to see output. This should have separate boxes in the output screen to show 
+the SQL query, and the table and another box to show the output of the LLM, along with 
+the original query done by the user.
 
 TO SUBMIT:
 
-Show a short (<1 minute) video showing your program working. You are permitted to have a cut to save time waiting for the llm to work. It should show off all the features you implemented and everything from the code being run in the command line to the user interface
+Show a short (<1 minute) video showing your program working. You are permitted to have a 
+cut to save time waiting for the llm to work. It should show off all the features you 
+implemented and everything from the code being run in the command line to the user interface
 
 Submit a README describing which features you implemented
 
-All code needed to run the project. This should include the SQL code to make the database, the python code to run the llm (including both scripts) and whatever frontend code you use.
+All code needed to run the project. This should include the SQL code to make the database, 
+the python code to run the llm (including both scripts) and whatever frontend code you use.
 
 Please also submit the citiations and transcripts of any chats you use.
 
