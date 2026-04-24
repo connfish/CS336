@@ -1,0 +1,14 @@
+# Create virtual environment
+python3 -m venv llm_env
+
+# Activate it
+source llm_env/bin/activate
+
+# Install CPU-only PyTorch
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining packages
+pip install transformers accelerate
+
+#to run model use this inside the virtual environment
+python3 llm_test.py
