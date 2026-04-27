@@ -34,3 +34,73 @@ python3 ilab_script.py "SELECT * FROM loanapplication LIMIT 5;"
 Next time you SSH in, run `source ~/cs336env/bin/activate` before running the script.
 
 ---
+## Session: 2026-04-26
+ 
+### Q: Does the llm_test have anything to do with the text processing?
+ 
+**Context:** Text processing in steps 3 requires usage of an llm call and was wondering if it was necessary for this step 3 and 4.
+ 
+**Response:** Nothing! You're done with it. It was just a test file to make sure the LLM worked — think of it as a practice run.
+ 
+---
+ 
+### Q: If I were to write questions to prompt the user, such as "Write an SQL query in response to the following schema and question" what would be the best prompts to do less text processing, what would good prompts be?
+ 
+**Context:** Step 3 requires building a prompt that combines instructions, the schema file, and the user's question. A better prompt means less text cleanup needed in step 5.
+ 
+**Response:**
+ 
+The key tricks to get clean SQL output with minimal post-processing:
+ 
+1. **End your prompt with `SQL:`** — the assignment hints at this directly. It forces the LLM to immediately start writing SQL instead of explaining things first.
+2. **Be explicit that you only want the query:**
+```
+You are a SQL expert. Only return a single SQL SELECT query, no explanation.
+ 
+Schema:
+{schema}
+ 
+Question: {user_question}
+ 
+SQL:
+```
+ 
+3. **Specify the database type** to get more accurate syntax:
+```
+Write a single PostgreSQL SELECT query...
+```
+ 
+The worst thing that happens is the LLM starts with "Sure! Here is your query..." — a direct prompt avoids that. Ending with `SQL:` is the most reliable trick to make the LLM immediately output the query.
+ 
+---
+ 
+### Q: If I were to write questions to prompt the user, such as "Write an SQL query in response to the following schema and question" what would be the best prompts to do less text processing, what would good prompts be?
+ 
+**Context:** Step 3 requires building a prompt that combines instructions, the schema file, and the user's question. A better prompt means less text cleanup needed in step 5.
+ 
+**Response:**
+ 
+The key tricks to get clean SQL output with minimal post-processing:
+ 
+1. **End your prompt with `SQL:`** — the assignment hints at this directly. It forces the LLM to immediately start writing SQL instead of explaining things first.
+2. **Be explicit that you only want the query:**
+```
+You are a SQL expert. Only return a single SQL SELECT query, no explanation.
+ 
+Schema:
+{schema}
+ 
+Question: {user_question}
+ 
+SQL:
+```
+ 
+3. **Specify the database type** to get more accurate syntax:
+```
+Write a single PostgreSQL SELECT query...
+```
+ 
+The worst thing that happens is the LLM starts with "Sure! Here is your query..." — a direct prompt avoids that. Ending with `SQL:` is the most reliable trick to make the LLM immediately output the query.
+ 
+---
+ 
