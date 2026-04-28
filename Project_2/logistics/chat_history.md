@@ -104,3 +104,93 @@ The worst thing that happens is the LLM starts with "Sure! Here is your query...
  
 ---
  
+## Session: 2026-04-28
+
+### Q: I'm on windows, how do I run this? What do I need to change? 
+
+# Create virtual environment
+# python3 -m venv llm_env
+
+# Activate it
+# source llm_env/bin/activate
+
+# Install CPU-only PyTorch
+# pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining packages
+# pip install transformers accelerate
+
+# to run model use this inside the virtual environment
+# python3 llm_test.py
+
+
+**Context** Using a Windows computer and needed to set up virtual environment
+
+**Response**
+
+On Windows, you need a few changes:
+batch# Create virtual environment
+python -m venv llm_env
+
+# Activate it  (Windows uses a different activation script)
+llm_env\Scripts\activate
+
+# Install CPU-only PyTorch
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining packages
+pip install transformers accelerate
+
+# Run your script
+python llm_test.py
+The two things that change on Windows are:
+python3 → python — Windows typically uses python rather than python3 in the command prompt or PowerShell.
+source llm_env/bin/activate → llm_env\Scripts\activate — On Windows the activation script lives in Scripts\ (not bin/) and you don't use source to run it. Just call it directly.
+Everything else (the pip installs, the PyTorch index URL) stays the same.
+
+Tip: Run these commands in Command Prompt or PowerShell. If you're using PowerShell and get an error about script execution being disabled, run Set-ExecutionPolicy -Scope CurrentUser RemoteSigned first, then try activating again.
+
+---
+
+### Q: I am now using an LLM and I want to extract the SQL query only. Can you help me? This is what is printed into the terminal:
+
+# SELECT COUNT(*) 
+# FROM LoanApplication 
+# WHERE loan_amount_000s > applicant_income_000s;
+
+**Context** Step 5 requires text cleanup of the output from the llm from previous steps and I would like to use regex.
+
+**Response** 
+
+Sure! You can extract just the SQL query from the output by stripping the markdown code fences. Here's a simple utility function:
+
+````
+python
+
+import re
+
+def extract_sql(text):
+    # Match content inside ```...``` blocks (with optional language tag)
+    match = re.search(r'```(?:\w+)?\s*(.*?)```', text, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+    return text.strip()  # fallback: return as-is if no code fences found
+````
+
+Then use it on whatever your LLM returns:
+python
+raw_output = llm_response  # whatever your model generates
+sql = extract_sql(raw_output)
+print(sql)
+This will give you just:
+SELECT COUNT(*) 
+FROM LoanApplication 
+WHERE loan_amount_000s > applicant_income_000s;
+The regex works by:
+
+ ```(?:\w+)? — matches the opening fence and optional language tag (like sql)
+\s*(.*?) — captures everything after it (non-greedy)
+``` — stops at the closing fence
+re.DOTALL — makes . match newlines so multi-line queries are captured
+
+If your LLM sometimes returns queries without code fences, the fallback return text.strip() handles that case too.

@@ -1,5 +1,6 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+from extract_sql import extract_sql
 
 # Load model once before the loop
 model_name = "Qwen/Qwen2.5-3B-Instruct"
@@ -33,7 +34,7 @@ SQL:"""
         inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
         outputs = model.generate(**inputs, max_new_tokens=200, do_sample=True, temperature=0.7)
         result = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        sql_output = result.split("SQL:")[-1].strip()
+        sql_output = extract_sql(result)
         print("\nResponse:\n")
         print(sql_output)
     else:
