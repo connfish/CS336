@@ -108,20 +108,20 @@ The worst thing that happens is the LLM starts with "Sure! Here is your query...
 
 ### Q: I'm on windows, how do I run this? What do I need to change? 
 
-# Create virtual environment
-# python3 -m venv llm_env
+#### Create virtual environment
+#### python3 -m venv llm_env
 
-# Activate it
-# source llm_env/bin/activate
+#### Activate it
+#### source llm_env/bin/activate
 
-# Install CPU-only PyTorch
-# pip install torch --index-url https://download.pytorch.org/whl/cpu
+#### Install CPU-only PyTorch
+#### pip install torch --index-url https://download.pytorch.org/whl/cpu
 
-# Install remaining packages
-# pip install transformers accelerate
+#### Install remaining packages
+#### pip install transformers accelerate
 
-# to run model use this inside the virtual environment
-# python3 llm_test.py
+#### to run model use this inside the virtual environment
+#### python3 llm_test.py
 
 
 **Context** Using a Windows computer and needed to set up virtual environment
@@ -132,16 +132,16 @@ On Windows, you need a few changes:
 batch# Create virtual environment
 python -m venv llm_env
 
-# Activate it  (Windows uses a different activation script)
+#### Activate it  (Windows uses a different activation script)
 llm_env\Scripts\activate
 
-# Install CPU-only PyTorch
+#### Install CPU-only PyTorch
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 
-# Install remaining packages
+#### Install remaining packages
 pip install transformers accelerate
 
-# Run your script
+#### Run your script
 python llm_test.py
 The two things that change on Windows are:
 python3 → python — Windows typically uses python rather than python3 in the command prompt or PowerShell.
@@ -154,9 +154,9 @@ Tip: Run these commands in Command Prompt or PowerShell. If you're using PowerSh
 
 ### Q: I am now using an LLM and I want to extract the SQL query only. Can you help me? This is what is printed into the terminal:
 
-# SELECT COUNT(*) 
-# FROM LoanApplication 
-# WHERE loan_amount_000s > applicant_income_000s;
+#### SELECT COUNT(*) 
+#### FROM LoanApplication 
+#### WHERE loan_amount_000s > applicant_income_000s;
 
 **Context** Step 5 requires text cleanup of the output from the llm from previous steps and I would like to use regex.
 
