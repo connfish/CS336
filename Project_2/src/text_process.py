@@ -9,7 +9,7 @@ def load_model():
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         dtype=torch.float32,
-        device_map="cpu",
+        device_map="auto",
     )
     return tokenizer, model
 

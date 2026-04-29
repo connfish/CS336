@@ -9,7 +9,7 @@ from extract_sql import extract_sql                  # Step 5
 
 
 def main():
-    # Step 6 - connect to ilab via SSH before loading the model
+    # Step 6 
     ssh_client = connect_ssh()
 
     # Step 2 - load the LLM
@@ -17,23 +17,23 @@ def main():
     tokenizer, model = load_model()
     print("LLM ready.\n")
 
-    # Step 1 (local) - load the schema subset to include in every prompt
+    # Step 1 (local) 
     schema_path = os.path.join(os.path.dirname(__file__), 'src', 'subset.sql')
     with open(schema_path, 'r') as f:
         schema = f.read()
 
-    # Step 4 - loop taking questions from the user, exits on "exit"
+    # Step 4 
     while True:
         user_question = input("Ask a question (or type 'exit' to quit): ")
         if user_question == "exit":
             print("Exiting program.")
             break
 
-        # Step 3 - build prompt and generate raw LLM output
+        # Step 3
         print("Processing...")
         raw = generate_sql(tokenizer, model, schema, user_question)
 
-        # Step 5 - extract only the SQL query from the LLM output
+        # Step 5
         sql_query = extract_sql(raw)
         if not sql_query:
             print("Could not extract a valid SQL query from the LLM output.")
@@ -42,7 +42,7 @@ def main():
 
         print(f"\nGenerated SQL:\n{sql_query}\n")
 
-        # Step 7 - send through the SSH tunnel and display results to the user
+        # Step 7
         print("Running query on ilab...")
         result = run_on_ilab(sql_query, ssh_client)
         if result.strip():
