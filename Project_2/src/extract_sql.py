@@ -1,3 +1,4 @@
+# Step 5 - extract only the SQL query from the raw LLM output
 import re
 
 def extract_sql(llm_output):

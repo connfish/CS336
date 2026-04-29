@@ -1,3 +1,4 @@
+# Step 1 (ON ILAB): Takes a SELECT query as an argument (or stdin) and prints the results from the Postgres database.
 
 """
 First Time Running:

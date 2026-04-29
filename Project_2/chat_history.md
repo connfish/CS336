@@ -194,3 +194,66 @@ The regex works by:
 re.DOTALL — makes . match newlines so multi-line queries are captured
 
 If your LLM sometimes returns queries without code fences, the fallback return text.strip() handles that case too.
+
+---
+
+## Session: 2026-04-28 (continued)
+
+### Q: I need to do step 6 — use an SSH tunnel to call ilab_script.py with the SQL output from the LLM.
+
+**Context:** Step 6 requires connecting to ilab via SSH using paramiko and getpass, sending the extracted SQL to ilab_script.py, and printing the results back to the user.
+
+**Response:**
+
+Created `step6/database_llm.py` which:
+1. Prompts for ilab username (visible) and password via `getpass.getpass()` (hidden)
+2. Opens an SSH connection to `ilab.cs.rutgers.edu` using paramiko
+3. Sends the extracted SQL to `ilab_script.py` via stdin over the tunnel
+4. Prints the returned table to the user
+
+Install paramiko before running:
+```bash
+pip install paramiko
+```
+
+Run with:
+```bash
+python step6/database_llm.py
+```
+
+---
+
+### Q: Is database_llm.py taking passwords in a visible way?
+
+**Context:** The assignment requires passwords not be taken visibly and to use the getpass library.
+
+**Response:** No — the password is already secure. `getpass.getpass("ilab password: ")` hides input so nothing is echoed to the terminal. The username uses `input()` which is visible, but that is intentional since usernames are not sensitive. The assignment requirement is already satisfied.
+
+---
+
+### Q: Can we clean up file management, consolidate files into one, and add step comments?
+
+**Context:** Steps 1–7 were spread across `text_process.py`, `extract_sql.py`, and `database_llm.py`. The user wanted everything in one place with comments marking each step.
+
+**Response:** Consolidated everything into `src/database_llm.py` with inline `# Step X` comments throughout. The `src/` folder now contains only three files: `database_llm.py` (steps 2–7), `ilab_script.py` (step 1 on ilab), and `subset.sql` (step 1 local schema).
+
+---
+
+### Q: Create a main.py that calls everything in src/ and revert the files back to being separate.
+
+**Context:** Rather than one merged file, the user wanted separate files per step with a `main.py` at the project root to orchestrate everything.
+
+**Response:**
+
+Refactored into:
+- `main.py` — project root entry point, runs steps 4 & 7 (the loop and final assembly)
+- `src/text_process.py` — steps 2 & 3 (`load_model()`, `generate_sql()`)
+- `src/extract_sql.py` — step 5 (`extract_sql()`)
+- `src/database_llm.py` — step 6 (`connect_ssh()`, `run_on_ilab()`)
+- `src/ilab_script.py` — step 1 on ilab (unchanged)
+- `src/subset.sql` — step 1 local schema (unchanged)
+
+Run the project with:
+```bash
+python main.py
+```
