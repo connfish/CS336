@@ -5,6 +5,7 @@
 | Name | Contributions |
 |------|--------------|
 | Connor Fisher | Ilab Scripts and ssh tunnel |
+| Matthew Ko | Query Extraction from LLM output (Regular Expressions) |
 | [Name] | [Contributions] |
 
 ---
@@ -55,10 +56,12 @@ pip install psycopg2-binary pandas
 ## What We Found Challenging
 
 Connor: Figuring out paramiko and how to connect the python script to the ilab machine to make the ssh tunnel connection
+Matthew: Figuring out how to accurately and consistently extract the query without knowing all of the different possible queries in advance. 
 
 ## What We Found Interesting
 
 Connor: Configuring the llm and how to give it context so it doesn't mess up some of the sql queries so I kind of hardcoded a bit of it's prompt messaging for better output for a specific query
+Matthew: Using regular expressions to extract the query was much more clean than trying to manually loop through the output for specific words or characters
 
 ---
 
