@@ -6,6 +6,7 @@
 |------|--------------|
 | Connor Fisher | Ilab Scripts and ssh tunnel |
 | Matthew Ko | Query Extraction from LLM output (Regular Expressions) |
+| Alexandra Domanski | text proccessing and logic writing |
 | [Name] | [Contributions] |
 
 ---
@@ -59,11 +60,17 @@ Connor: Figuring out paramiko and how to connect the python script to the ilab m
 
 Matthew: Figuring out how to accurately and consistently extract the query without knowing all of the different possible queries in advance. 
 
+Alexandra: I found it challenging how to write the logic to make the loop running where it asks
+questions from the user and feeding it to the llm, it was defintley a lot of trial and error. 
+Additionally, it was difficult me to run it on my laptop, it might just be me specifically. 
+
 ## What We Found Interesting
 
 Connor: Configuring the llm and how to give it context so it doesn't mess up some of the sql queries so I kind of hardcoded a bit of it's prompt messaging for better output for a specific query
 
 Matthew: Using regular expressions to extract the query was much more clean than trying to manually loop through the output for specific words or characters
+
+Alexandra: I found the whole concept of the assignment very interesting, being able to ask an llm a question about a data set and recieve a corresponding SQL statement that can derive that prompt.
 
 ---
 
