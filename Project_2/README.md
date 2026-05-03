@@ -16,7 +16,7 @@
 ### Prerequisites
 Install required packages:
 ```bash
-pip install paramiko torch transformers
+pip install paramiko torch transformers accelerate
 ```
 
 ### Running the CLI
