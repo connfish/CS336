@@ -6,12 +6,7 @@ from tkinter import messagebox
 
 import paramiko
 
-# Make tkinter respect Windows DPI scaling so widgets aren't blurred/clipped.
-try:
-    from ctypes import windll
-    windll.shcore.SetProcessDpiAwareness(1)
-except Exception:
-    pass
+
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
@@ -19,6 +14,15 @@ from database_llm import load_model, generate_sql, extract_sql, run_on_ilab, ILA
 
 
 state = {"tokenizer": None, "model": None, "schema": None, "ssh": None}
+
+
+def make_button(parent, text, command, **kwargs):
+    btn = tk.Label(parent, text=text, bg="#0c82ff", fg="black",
+                   cursor="hand2", relief="flat", padx=10, pady=6, **kwargs)
+    btn.bind("<Button-1>", lambda e: command())
+    btn.bind("<Enter>", lambda e: btn.config(bg="#3a9aff"))
+    btn.bind("<Leave>", lambda e: btn.config(bg="#0c82ff"))
+    return btn
 
 
 def center_over(win, parent, w, h):
@@ -58,11 +62,11 @@ def ilab_login(parent):
              font=("Arial", 14, "bold")).grid(row=0, column=0, pady=(0, 14))
 
     tk.Label(body, text="Username", bg="white", anchor="w").grid(row=1, column=0, sticky="w")
-    user_entry = tk.Entry(body)
+    user_entry = tk.Entry(body, bg="white", fg="black", insertbackground="black")
     user_entry.grid(row=2, column=0, sticky="ew", pady=(2, 10))
 
     tk.Label(body, text="Password", bg="white", anchor="w").grid(row=3, column=0, sticky="w")
-    pass_entry = tk.Entry(body, show="*")
+    pass_entry = tk.Entry(body, show="*", bg="white", fg="black", insertbackground="black")
     pass_entry.grid(row=4, column=0, sticky="ew", pady=(2, 6))
 
     def attempt(event=None):
@@ -80,9 +84,8 @@ def ilab_login(parent):
         except Exception as e:
             messagebox.showerror("Login Failed", f"Wrong username or password:\n{e}", parent=win)
 
-    tk.Button(body, text="Login", bg="#0c82ff", fg="black",
-              command=attempt, width=14, height=2,
-              font=("Arial", 11, "bold")).grid(row=5, column=0, pady=(14, 0))
+    make_button(body, "Login", attempt,
+                width=14, font=("Arial", 11, "bold")).grid(row=5, column=0, pady=(14, 0))
 
     win.bind("<Return>", attempt)
     user_entry.focus_set()
@@ -182,24 +185,24 @@ root.grid_columnconfigure(0, weight=1)
 tk.Label(root, text="Enter your question:", bg="white", fg="#0c82ff",
          font=("Arial", 16, "bold")).grid(row=0, column=0, sticky="w", padx=20, pady=(15, 4))
 
-question_entry = tk.Text(root, height=3, wrap="word")
+question_entry = tk.Text(root, height=3, wrap="word", bg="white", fg="black", insertbackground="black")
 question_entry.grid(row=1, column=0, sticky="ew", padx=20, pady=4)
 
 button_row = tk.Frame(root, bg="white")
 button_row.grid(row=2, column=0, pady=10)
-tk.Button(button_row, text="Generate SQL and Run Query", bg="#0c82ff", fg="black",
-          command=on_go, width=28).pack(padx=6)
+make_button(button_row, "Generate SQL and Run Query", on_go,
+            width=28).pack(padx=6)
 
 tk.Label(root, text="SQL:", bg="white").grid(row=3, column=0, sticky="w", padx=20)
-sql_box = tk.Text(root, height=6, wrap="word", state="disabled")
+sql_box = tk.Text(root, height=6, wrap="word", state="disabled", bg="white", fg="black")
 sql_box.grid(row=4, column=0, sticky="ew", padx=20, pady=(2, 8))
 
 tk.Label(root, text="Results:", bg="white").grid(row=5, column=0, sticky="w", padx=20)
-results_box = tk.Text(root, height=10, wrap="word", state="disabled")
+results_box = tk.Text(root, height=10, wrap="word", state="disabled", bg="white", fg="black")
 results_box.grid(row=6, column=0, sticky="nsew", padx=20, pady=(2, 8))
 
-tk.Button(root, text="Clear", bg="#0c82ff", fg="black",
-          command=on_clear, width=12).grid(row=7, column=0, pady=(0, 20))
+make_button(root, "Clear", on_clear,
+            width=12).grid(row=7, column=0, pady=(0, 20))
 
 root.bind("<Return>", on_enter)
 question_entry.bind("<Return>", on_enter)
