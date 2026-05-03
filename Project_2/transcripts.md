@@ -230,3 +230,53 @@ python step6/database_llm.py
 **Response:** No — the password is already secure. `getpass.getpass("ilab password: ")` hides input so nothing is echoed to the terminal. The username uses `input()` which is visible, but that is intentional since usernames are not sensitive. The assignment requirement is already satisfied.
 
 ---
+
+## Session: 2026-05-03
+
+### Q: What does "Some parameters are on the meta device because they were offloaded to the disk" mean?
+
+**Context:** Running `gui.py` locally and seeing this warning from HuggingFace/transformers after loading the model.
+
+**Response:**
+
+This comes from `device_map="auto"` in `load_model()` (`database_llm.py:48`). When the model is too large to fit in available RAM/VRAM, HuggingFace's `accelerate` library offloads some layers to disk.
+
+- **Meta device**: A PyTorch virtual device where tensors only hold metadata (shape, dtype) but no actual values in memory — just a placeholder.
+- **Disk offload**: Those placeholder parameters are backed by memory-mapped files on disk. When that layer is needed during inference, values are streamed from disk into RAM temporarily.
+
+The model still works, but inference will be significantly slower due to disk I/O on every forward pass. The root cause is loading in `float32` — switching to `float16` cuts memory use in half:
+```python
+dtype=torch.float16,  # in load_model()
+```
+
+---
+
+### Q: Is this loading data into my drive and taking up storage?
+
+**Response:**
+
+Yes, two things are happening:
+
+1. **Disk offload temp files** — written while the process runs, cleaned up on exit.
+2. **HuggingFace download cache** — the model weights are cached permanently at `~/.cache/huggingface/hub/` so they don't re-download. For a large LLM in float32 this can be **5–20+ GB**.
+
+Check usage with:
+```bash
+du -sh ~/.cache/huggingface/hub/
+```
+
+---
+
+### Q: The GUI looks fine on Windows but on Mac the text boxes are blacked out and there are black borders around the buttons. Can you fix this?
+
+**Context:** Extra credit GUI (`extra_credit/gui.py`) — macOS dark mode causes display issues.
+
+**Response:**
+
+Two separate macOS issues:
+
+1. **Blacked-out text boxes** — `tk.Text` and `tk.Entry` widgets had no explicit colors, so they inherited macOS dark mode defaults. Fixed by adding `bg="white"`, `fg="black"`, `insertbackground="black"` to all text/entry widgets.
+
+2. **Black button borders** — macOS uses native OS rendering for `tk.Button` which draws its own border regardless of `highlightthickness=0`. Fixed by replacing all `tk.Button` instances with a `make_button()` helper that uses `tk.Label` with a click binding — Labels render as plain colored rectangles with no OS border. Also added a subtle hover effect (lightens to `#3a9aff` on hover).
+
+---
